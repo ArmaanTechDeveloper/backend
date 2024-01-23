@@ -15,8 +15,24 @@ const friends = [
 
 const server = http.createServer((req , res) => {
     const items = req.url.split('/')
+    if(req.method === 'POST' && items[1] === 'friends') {
+        req.on('data' , (data) => {
+            const friend = data.toString();
+            console.log('Request : ' , friend);
+            friends.push(JSON.parse(friend));
+        })
+        req.pipe(res);
 
-    if(items[1] === 'hello'){
+        /*
+        
+        fetch('http://localhost:3000/friends' , { method: 'POST' , body: JSON.stringify({ id: 3 , name: 'ryan dahl'})})
+        .then((res) => res.json())
+        .then((friend) => console.log(friend))
+
+        run this code to make a post request to the server 
+        */
+    }
+    else if(req.method === 'GET' && items[1] === 'hello'){
         res.writeHead(200 , {
             'Content-Type' : 'application/json'
         });
@@ -26,7 +42,7 @@ const server = http.createServer((req , res) => {
             message: 'Hello world'
         }))
     }
-    else if (items[1] === 'messages') {
+    else if (req.method === 'GET' && items[1] === 'messages') {
         res.statusCode = 200; // optional to add it will be automatically 200 if nothing is supplied
         res.setHeader('Content-Type' , 'text/html');
         res.write('<html>')
@@ -39,7 +55,7 @@ const server = http.createServer((req , res) => {
         res.write('</html>')
         res.end()
     }
-    else if(items[1] == 'friends'){
+    else if(req.method === 'GET' && items[1] == 'friends'){
         if(items.length === 3) {
             const friendId = Number(items[2]);
             res.end(JSON.stringify(friends[friendId]))
