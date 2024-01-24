@@ -15,6 +15,15 @@ const friends = [
     }
 ]
 
+app.use((req , res , next) => {
+    const start = Date.now()
+    next()
+    const delta = Date.now() - start
+    console.log(`${req.method}  ${req.url}  ${delta}ms`)
+})
+
+app.use(express.json())
+
 app.get('/friends' , (req , res) => {
     res.send(friends)
 })
@@ -33,12 +42,20 @@ app.get('/friends/:friendId' , (req , res) => {
     }
 })
 
-app.get('/messages' , (req , res) => {
-    res.send('<ul><li> My profile is a great looking profile </li></ul>')
-})
+app.post('/friends' , (req , res) => {
+    if(!req.body.name){
+        return res.status(400).json({
+            error: "Name does not exist"
+        })
+    }
 
-app.post('/messages' , (req , res) => {
-    console.log('updating messages ...')
+    const newFriend = {
+        name: req.body.name,
+        id: friends.length
+    }
+
+    friends.push(newFriend)
+    res.json(newFriend)
 })
 
 app.listen(PORT , () => {
