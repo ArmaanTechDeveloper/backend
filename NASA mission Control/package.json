@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "name": "nasa-mission-control",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "client": "cd client && npm run start",
+    "server": "cd server && npm run watch",
+    "watch": "concurrently \"npm run client\" \"npm run server\"",
+    "install-client": "cd client && npm install",
+    "install-server": "cd server && npm install",
+    "setup": "concurrently \"npm run install-client\" \"npm run install-server\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
